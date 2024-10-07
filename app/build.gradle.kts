@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.android
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,14 +7,14 @@ plugins {
 
 android {
     namespace = "id.my.andka.bstkj"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "id.my.andka.bstkj"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,6 +38,7 @@ android {
     buildFeatures {
         compose = true
     }
+
 }
 
 dependencies {
@@ -55,14 +54,10 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    implementation(libs.markdown.textview)
     implementation(libs.coil.compose)
-    implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
 
-    ksp(libs.hilt.compiler)
     ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
