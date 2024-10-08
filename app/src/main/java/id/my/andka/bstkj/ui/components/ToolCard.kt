@@ -1,5 +1,6 @@
 package id.my.andka.bstkj.ui.components
 
+import android.content.res.Configuration
 import android.content.res.Resources
 import id.my.andka.bstkj.R
 import androidx.compose.foundation.Image
@@ -8,6 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,23 +29,23 @@ fun ToolCard(
     icon: ImageVector,
     onClick: () -> Unit = {}
 ) {
-   Box(
-    modifier = modifier
-        .clickable { onClick() }
-        .padding(8.dp)
-        .shadow(
-            elevation = 8.dp,
-            shape = RoundedCornerShape(16.dp),
-            ambientColor = Color(0xFFB0BEC5),
-            spotColor = Color(0xFFB0BEC5)
-        )
-        .background(
-            color = Color.White,
-            shape = RoundedCornerShape(16.dp)
-        )
-        .padding(16.dp),
-    contentAlignment = Alignment.TopStart
-) {
+    Box(
+        modifier = modifier
+            .padding(8.dp)
+            .shadow(
+                elevation = 8.dp,
+                shape = RoundedCornerShape(16.dp),
+                ambientColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                spotColor = MaterialTheme.colorScheme.surfaceContainerHigh
+            )
+            .background(
+                color = MaterialTheme.colorScheme.surfaceContainer,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .clickable { onClick() }
+            .padding(16.dp),
+        contentAlignment = Alignment.TopStart
+    ) {
         Column {
             Image(
                 imageVector = icon,
@@ -54,19 +56,26 @@ fun ToolCard(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = title,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }
 }
 
 @Composable
-@Preview(device = "id:pixel_9_pro_xl", showSystemUi = true, backgroundColor = 0xF0F1F2)
+@Preview(
+    device = "id:pixel_9_pro_xl", showSystemUi = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    backgroundColor = 0x121316ff
+)
 fun ToolCardPreview() {
     BsTKJTheme {
-        ToolCard(
-            title = "IP Calculator",
-            icon = ImageVector.vectorResource(id = R.drawable.i_wireless_color)
-        )
+        Surface() {
+            ToolCard(
+                title = "IP Calculator",
+                icon = ImageVector.vectorResource(id = R.drawable.i_wireless_color)
+            )
+        }
     }
 }
