@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +27,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import id.my.andka.bstkj.ui.components.ToolCard
 import id.my.andka.bstkj.ui.theme.BsTKJTheme
+
+data class Tool(
+    val title: String,
+    val icon: Int
+)
+
+private val toolCards = listOf(
+    Tool(
+        title = "IP Calculator",
+        icon =R.drawable.i_wireless_color
+    )
+)
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
@@ -39,20 +54,21 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(horizontal = 8.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
-        LazyVerticalGrid(
-            columns = GridCells.Adaptive(200.dp),
+        LazyVerticalStaggeredGrid(
+            columns = StaggeredGridCells.Adaptive(200.dp),
             contentPadding = PaddingValues(0.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalItemSpacing = 8.dp,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth(),
-        ) {
-            item {
-                ToolCard(
-                    title = stringResource(id = R.string.ip_calculator),
-                    icon = ImageVector.vectorResource(id = R.drawable.i_wireless_color)
-                )
+            content = {
+                items(toolCards) { tool ->
+                    ToolCard(
+                        title = tool.title,
+                        icon = ImageVector.vectorResource(id = tool.icon)
+                    )
+                }
             }
-        }
+        )
     }
 }
 
