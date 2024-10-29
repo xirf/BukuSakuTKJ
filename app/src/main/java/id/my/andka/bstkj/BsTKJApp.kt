@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import id.my.andka.bstkj.ui.navigation.Screen
 import id.my.andka.bstkj.ui.screen.home.HomeScreen
+import id.my.andka.bstkj.ui.screen.ipcalculator.IPCalculatorScreen
 import id.my.andka.bstkj.ui.theme.BsTKJTheme
 
 
@@ -39,7 +40,10 @@ fun BsTKJContent(
         ) {
             // Home
             composable(Screen.Home.route) {
-                HomeScreen()
+                HomeScreen(navController = navController)
+            }
+            composable(Screen.IpCalculator.route){
+                IPCalculatorScreen()
             }
         }
     }
