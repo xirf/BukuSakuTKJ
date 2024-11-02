@@ -37,4 +37,8 @@ class IpCalculatorViewModel : ViewModel() {
             )
         }
     }
+
+    companion object {
+        val instance by lazy { IpCalculatorViewModel() }
+    }
 }

@@ -1,6 +1,6 @@
 package id.my.andka.bstkj.ui.screen.ipcalculator
 
-import android.widget.GridView
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,16 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,28 +21,63 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import id.my.andka.bstkj.R
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import id.my.andka.bstkj.ui.theme.BsTKJTheme
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.derivedStateOf
+import id.my.andka.bstkj.ui.components.Dropdown
+import id.my.andka.bstkj.ui.components.SmallNumberInput
 
 @Composable
-fun IPCalculatorScreen(modifier: Modifier = Modifier) {
+fun IPCalculatorScreen(
+    modifier: Modifier = Modifier,
+) {
     var ipInput by remember { mutableStateOf(TextFieldValue("")) }
     var subnetMask by remember { mutableIntStateOf(24) }
-//    var networkDetails by mutableStateOf(NetworkDetails())
+    var netMask by remember { mutableStateOf("255.0.0.0") }
+    val subnetMasks = mapOf<String, Int>(
+        "255.0.0.0" to 8,
+        "255.128.0.0" to 9,
+        "255.192.0.0" to 10,
+        "255.224.0.0" to 11,
+        "255.240.0.0" to 12,
+        "255.248.0.0" to 13,
+        "255.252.0.0" to 14,
+        "255.254.0.0" to 15,
+        "255.255.0.0" to 16,
+        "255.255.128.0" to 17,
+        "255.255.192.0" to 18,
+        "255.255.224.0" to 19,
+        "255.255.240.0" to 20,
+        "255.255.248.0" to 21,
+        "255.255.252.0" to 22,
+        "255.255.254.0" to 23,
+        "255.255.255.0" to 24,
+        "255.255.255.128" to 25,
+        "255.255.255.192" to 26,
+        "255.255.255.224" to 27,
+        "255.255.255.240" to 28,
+        "255.255.255.248" to 29,
+        "255.255.255.252" to 30,
+        "255.255.255.254" to 31,
+        "255.255.255.255" to 32
+    )
 
+    val derivedNetMask = remember(subnetMask) {
+        derivedStateOf { subnetMasks.entries.find { it.value == subnetMask }?.key ?: "255.0.0.0" }
+    }
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(16.dp)
+            .background(MaterialTheme.colorScheme.background)
+        ,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
@@ -63,59 +92,68 @@ fun IPCalculatorScreen(modifier: Modifier = Modifier) {
             text = "Alamat IPv4",
             style = MaterialTheme.typography.titleMedium
         )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IpInput(label = "192")
-            Text(".")
-            IpInput(label = "192")
-            Text(".")
-            IpInput(label = "192")
-            Text(".")
-            IpInput(label = "192")
-            Text("/")
-            IpInput(label = "24")
-        }
+        IpInput()
         Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Subnet Mask",
-            style = MaterialTheme.typography.titleMedium
+        SubnetInput(
+            subnetMasks = subnetMasks.keys.toList(),
+            onMaskSelected = {subnetMask = it},
+            netMask = derivedNetMask.value,
+            subnetMask = subnetMask.toFloat()
         )
-        IpInput(label = "255.255.255.0", modifier = Modifier.fillMaxWidth())
-        Slider(
-            value = subnetMask.toFloat(),
-            onValueChange = {
-                subnetMask = it.toInt()
-//                networkDetails = calculateNetworkDetails(ipInput.text, subnetMask)
-            },
-            valueRange = 0f..32f,
-            steps = 31,
-            modifier = Modifier.fillMaxWidth()
-        )
+
     }
 }
 
 @Composable
-fun IpInput(
-    label: String,
-    onChange: (String) -> Unit = {},
+fun SubnetInput(
     modifier: Modifier = Modifier,
-) {
-    TextField(
-        value = "",
-        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-        onValueChange = onChange,
-        singleLine = true,
-        placeholder = { Text(text = label) },
-        shape = RoundedCornerShape(16.dp),
-        modifier = modifier.width(64.dp),
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
+    subnetMasks: List<String>,
+    onMaskSelected: (Int) -> Unit,
+    netMask: String,
+    subnetMask: Float
+){
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = "Subnet Mask",
+            style = MaterialTheme.typography.titleMedium
         )
+        Dropdown(
+            onMaskSelected = {onMaskSelected},
+            values = subnetMasks,
+            selected = netMask
+        )
+    }
+    Slider(
+        value = subnetMask,
+        onValueChange = { onMaskSelected(it.toInt()) },
+        valueRange = 0f..32f,
+        steps = 31,
+        modifier = Modifier.fillMaxWidth()
     )
+}
+
+
+@Composable
+fun IpInput(){
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        SmallNumberInput(label = "192")
+        Text(".")
+        SmallNumberInput(label = "192")
+        Text(".")
+        SmallNumberInput(label = "192")
+        Text(".")
+        SmallNumberInput(label = "192")
+        Text("/")
+        SmallNumberInput(label = "24")
+    }
 }
 
 @Composable

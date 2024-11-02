@@ -11,8 +11,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import id.my.andka.bstkj.ui.navigation.Screen
+import id.my.andka.bstkj.ui.navigation.composableWithTransitions
 import id.my.andka.bstkj.ui.screen.home.HomeScreen
 import id.my.andka.bstkj.ui.screen.ipcalculator.IPCalculatorScreen
 import id.my.andka.bstkj.ui.theme.BsTKJTheme
@@ -38,11 +38,11 @@ fun BsTKJContent(
             startDestination = Screen.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            // Home
-            composable(Screen.Home.route) {
+            composableWithTransitions(Screen.Home.route) {
                 HomeScreen(navController = navController)
             }
-            composable(Screen.IpCalculator.route){
+
+            composableWithTransitions(Screen.IpCalculator.route) {
                 IPCalculatorScreen()
             }
         }
