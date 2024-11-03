@@ -31,7 +31,7 @@ import id.my.andka.bstkj.ui.theme.BsTKJTheme
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.derivedStateOf
 import id.my.andka.bstkj.ui.components.Dropdown
-import id.my.andka.bstkj.ui.components.SmallNumberInput
+import id.my.andka.bstkj.ui.screen.ipcalculator.components.IpInput
 
 @Composable
 fun IPCalculatorScreen(
@@ -137,24 +137,7 @@ fun SubnetInput(
 }
 
 
-@Composable
-fun IpInput(){
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        SmallNumberInput(label = "192")
-        Text(".")
-        SmallNumberInput(label = "192")
-        Text(".")
-        SmallNumberInput(label = "192")
-        Text(".")
-        SmallNumberInput(label = "192")
-        Text("/")
-        SmallNumberInput(label = "24")
-    }
-}
+
 
 @Composable
 @Preview(
