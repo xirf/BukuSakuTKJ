@@ -13,6 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import id.my.andka.bstkj.R
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,7 +33,8 @@ fun IPCalculatorScreen(
     modifier: Modifier = Modifier,
     viewModel: IpCalculatorViewModel = IpCalculatorViewModel.instance
 ) {
-    val subnetMask by viewModel.subnetMask.collectAsState()
+    var subnetMask by remember { mutableIntStateOf(24) }
+
 
     Column(
         modifier = modifier
@@ -56,19 +60,24 @@ fun IPCalculatorScreen(
                 viewModel.onIpInputChange(address)
                 viewModel.onSubnetMaskChange(subnet)
             },
+            onSubnetChanged = { subnet ->
+                subnetMask = subnet
+                viewModel.onSubnetMaskChange(subnet)
+            },
             subnet = subnetMask
         )
         Spacer(modifier = Modifier.height(8.dp))
         SubnetInput(
-            onMaskSelected = { viewModel.onSubnetMaskChange(it) },
+            onMaskSelected = {
+                subnetMask = it
+                viewModel.onSubnetMaskChange(it)
+            },
             netMask = subnetMask
         )
         Spacer(modifier = Modifier.height(8.dp))
         NetworkDetails(viewModel = viewModel)
     }
 }
-
-
 
 @Composable
 @Preview(

@@ -19,19 +19,19 @@ import androidx.compose.ui.platform.LocalFocusManager
 fun IpInput(
     modifier: Modifier = Modifier,
     onIpChanged: (address: String, subnet: Int) -> Unit = { _, _ -> },
+    onSubnetChanged: (subnet: Int) -> Unit,
     subnet: Int = 24
 ) {
     var input1 by remember { mutableStateOf("") }
     var input2 by remember { mutableStateOf("") }
     var input3 by remember { mutableStateOf("") }
     var input4 by remember { mutableStateOf("") }
-    var subnetMask by remember { mutableIntStateOf(subnet) }
     val focusManager = LocalFocusManager.current
 
     fun triggerIpChanged() {
         if (input1.isNotEmpty() && input2.isNotEmpty() && input3.isNotEmpty() && input4.isNotEmpty()) {
             val ipAddress = "$input1.$input2.$input3.$input4"
-            onIpChanged(ipAddress, subnetMask)
+            onIpChanged(ipAddress, subnet)
         }
     }
 
@@ -92,10 +92,10 @@ fun IpInput(
             label = "24",
             min = 0,
             max = 32,
-            value = subnetMask.toString(),
+            value = subnet.toString(),
             onValueChange = {
                 if (it.length <= 2) {
-                    subnetMask = it.toInt()
+                    onSubnetChanged(it.toInt())
                     triggerIpChanged()
                 }
             }

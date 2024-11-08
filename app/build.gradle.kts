@@ -22,6 +22,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -58,6 +59,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material.icons.core)
+    implementation(libs.ipaddress)
+
 
     ksp(libs.androidx.room.compiler)
 

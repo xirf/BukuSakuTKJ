@@ -1,57 +1,76 @@
 package id.my.andka.bstkj.utils
 
 import id.my.andka.bstkj.model.*
+import inet.ipaddr.IPAddressString
 
 class IPv4Calculator {
     companion object {
         fun calculate(ipAddress: String, cidr: Int): CalculationResult {
             return try {
-                val octets = ipAddress.split(".").map { it.toIntOrNull() }
-                if (octets.any { it == null || it !in 0..255 }) {
-                    return CalculationResult.Failure(IPv4Error("IP_ADDRESS", "Invalid IP address"))
+                // Parse IP and CIDR using IPAddressString
+                val ipString = "$ipAddress/$cidr"
+                val ipAddressString = IPAddressString(ipString).address
+                    ?: return CalculationResult.Failure(
+                        IPv4Error(
+                            "IP_ADDRESS",
+                            "Invalid IP address"
+                        )
+                    )
+
+                // Validate that it's an IPv4 address
+                if (!ipAddressString.isIPv4) {
+                    return CalculationResult.Failure(IPv4Error("IP_ADDRESS", "Not an IPv4 address"))
                 }
 
-                val baseIpNumeric = ipAddress.toNumericIP()
-                val netmaskNumeric = calculateNetmaskFromCIDR(cidr)
-                val totalIPs = (1L shl (32 - cidr)) - 1
-                val baseNetworkIP = baseIpNumeric and netmaskNumeric
-                val networkClass = determineNetworkClass(ipAddress)
+                val ipv4Address = ipAddressString.toIPv4()`
+
+                // Network properties
+                val networkClass = determineNetworkClass(ipv4Address.toNormalizedString())
+                val totalIPs =
+                    ipv4Address.networkPrefixLength.toLong().let { 1L shl ((32 - it).toInt()) }
                 val totalSubnets = 1L shl (cidr - defaultClassBits(networkClass))
 
+                // Calculate Network and Broadcast Addresses
+                val networkAddress = ipv4Address.toNetworkAddress()
+                val broadcastAddress = ipv4Address.toBroadcastAddress()
+
+                // Network detail encapsulation
                 val networkDetail = NetworkDetail(
-                    networkClass,
-                    totalSubnets,
-                    totalIPs - 1,
-                    baseNetworkIP.toSymbolicIP(),
-                    (baseNetworkIP + 1).toSymbolicIP(),
-                    (baseNetworkIP + totalIPs - 1).toInt().toSymbolicIP(),
-                    (baseNetworkIP + totalIPs).toInt().toSymbolicIP(),
-                    baseIpNumeric.toBinaryString(),
-                    netmaskNumeric.toBinaryString(),
-                    netmaskNumeric.inv().toBinaryString()
+                    networkClass = networkClass,
+                    totalSubnets = totalSubnets,
+                    usableHosts = totalIPs - 2, // Exclude network and broadcast
+                    networkAddress = networkAddress.toNormalizedString(),
+                    firstHostAddress = networkAddress.increment(1).toNormalizedString(),
+                    lastHostAddress = broadcastAddress.toBroadcastAddress().toNormalizedString(),
+                    broadcastAddress = broadcastAddress.toNormalizedString(),
+                    binaryNetworkAddress = toBinaryString(networkAddress.toNormalizedString()),
+                    binaryNetmask = toBinaryString(ipv4Address.networkPrefixLength),
+                    binaryWildcardMask = toBinaryString(ipv4Address.networkPrefixLength.inv())
                 )
 
                 CalculationResult.Success(
                     IPv4Result(
-                        "${baseNetworkIP.toSymbolicIP()}/$cidr",
-                        netmaskNumeric.toSymbolicIP(),
-                        totalIPs.coerceAtLeast(1),
-                        netmaskNumeric.inv().toSymbolicIP(),
-                        (baseNetworkIP + totalIPs).toInt().toSymbolicIP(),
-                        "${(baseNetworkIP + 1).toSymbolicIP()} - ${
-                            (baseNetworkIP + totalIPs - 1).toInt().toSymbolicIP()
+                        cidr = "$ipAddress/$cidr",
+                        netmask = toBinaryString(ipv4Address.networkPrefixLength),
+                        numberOfHosts = totalIPs,
+                        wildcardMask = toBinaryString(ipv4Address.networkPrefixLength.inv()),
+                        broadcastAddress = broadcastAddress.toNormalizedString(),
+                        hostAddressRange = "${networkAddress.increment(1).toNormalizedString()} - ${
+                            broadcastAddress.toBroadcastAddress().toNormalizedString()
                         }",
-                        netmaskNumeric.toBinaryString(),
-                        generateAvailableIPs(baseNetworkIP, totalIPs),
-                        networkDetail,
-                        generateSubnetDetails(baseNetworkIP, totalSubnets, totalIPs)
+                        binaryNetmask = toBinaryString(ipv4Address.networkPrefixLength),
+                        availableIPs = generateAvailableIPs(IPAddressString(ipString), totalIPs),
+                        networkDetail = networkDetail,
+                        subnetDetails = generateSubnetDetails(
+                            IPAddressString(ipString),
+                            totalSubnets,
+                            totalIPs
+                        )
                     )
                 )
             } catch (e: Exception) {
                 CalculationResult.Failure(
-                    IPv4Error(
-                        "CALCULATION", "Calculation error: ${e.message}"
-                    )
+                    IPv4Error("CALCULATION", "Calculation error: ${e.message}")
                 )
             }
         }
@@ -75,57 +94,42 @@ class IPv4Calculator {
         }
 
         private fun generateSubnetDetails(
-            baseNetworkIP: Int, totalSubnets: Long, hostsPerSubnet: Long
+            baseNetworkIP: IPAddressString, totalSubnets: Long, hostsPerSubnet: Long
         ): List<SubnetDetail> {
-            val subnetSize = hostsPerSubnet + 1
-            return (0 until totalSubnets.coerceAtMost(64)).map {
-                val subnetBaseIP = baseNetworkIP + (it * subnetSize)
-                SubnetDetail(
-                    subnetBaseIP.toInt().toSymbolicIP(),
-                    (subnetBaseIP + 1).toInt().toSymbolicIP(),
-                    (subnetBaseIP + subnetSize - 2).toInt().toSymbolicIP(),
-                    (subnetBaseIP + subnetSize - 1).toInt().toSymbolicIP()
+            val subnetList = mutableListOf<SubnetDetail>()
+            val subnetSize = hostsPerSubnet + 2
+            for (i in 0 until totalSubnets) {
+                val subnetBaseIP = baseNetworkIP.toAddress().increment(i * subnetSize)
+                subnetList.add(
+                    SubnetDetail(
+                        network = subnetBaseIP.toNormalizedString(),
+                        firstHost = subnetBaseIP.increment(1).toNormalizedString(),
+                        lastHost = subnetBaseIP.increment(subnetSize - 2).toNormalizedString(),
+                        broadcast = subnetBaseIP.increment(subnetSize - 1).toNormalizedString()
+                    )
                 )
+            }
+            return subnetList
+        }
+
+        private fun generateAvailableIPs(
+            baseNetworkIP: IPAddressString,
+            totalIPs: Long
+        ): List<IPRange> {
+            val usableIPs = (1 until totalIPs.coerceAtMost(1024) - 1).map {
+                baseNetworkIP.toAddress().increment(it.toInt().toLong()).toNormalizedString()
+            }
+            return listOf(IPRange("Available IPs", usableIPs))
+        }
+
+        private fun toBinaryString(ip: String): String {
+            return ip.split(".").joinToString(".") {
+                it.toInt().toString(2).padStart(8, '0')
             }
         }
 
-        private fun String.toNumericIP() =
-            split(".").fold(0) { acc, octet -> (acc shl 8) or (octet.toInt() and 0xff) }
-
-        private fun Int.toSymbolicIP() =
-            (24 downTo 0 step 8).joinToString(".") { ((this ushr it) and 0xff).toString() }
-
-        private fun calculateNetmaskFromCIDR(cidr: Int) = -1 shl (32 - cidr)
-
-        private fun Int.toBinaryString() =
-            (31 downTo 0).joinToString("") { if ((this and (1 shl it)) != 0) "1" else "0" }
-                .chunked(8).joinToString(".")
-
-        private fun generateAvailableIPs(baseNetworkIP: Int, totalIPs: Long): List<IPRange> {
-            val allIPs = (1 until totalIPs.coerceAtMost(1024) - 1).map {
-                (baseNetworkIP + it).toInt().toSymbolicIP()
-            }
-            return when {
-                totalIPs <= 4 -> listOf(IPRange("Usable Host IPs", allIPs))
-                totalIPs <= 256 -> {
-                    val segments = allIPs.chunked(allIPs.size / 4)
-                    listOf(IPRange("Gateway Candidates", segments.getOrElse(0) { emptyList() }),
-                        IPRange("General Purpose IPs",
-                            segments.getOrElse(1) { emptyList() } + segments.getOrElse(2) { emptyList() }),
-                        IPRange("Special Purpose", segments.getOrElse(3) { emptyList() })
-                    )
-                }
-
-                else -> {
-                    val segments = allIPs.chunked((allIPs.size * 0.1).toInt())
-                    listOf(
-                        IPRange("Infrastructure IPs", segments.getOrElse(0) { emptyList() }),
-                        IPRange("DHCP Pool", segments.subList(1, 5).flatten()),
-                        IPRange("Static Assignment", segments.subList(5, 9).flatten()),
-                        IPRange("Reserved", segments.lastOrNull() ?: emptyList())
-                    )
-                }
-            }
+        private fun toBinaryString(prefixLength: Int): String {
+            return "1".repeat(prefixLength).padEnd(32, '0').chunked(8).joinToString(".")
         }
     }
 }

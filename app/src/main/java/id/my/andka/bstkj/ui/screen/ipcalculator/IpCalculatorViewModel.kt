@@ -10,11 +10,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class IpCalculatorViewModel : ViewModel() {
-    private val _ipInput = MutableStateFlow("")
-    val ipInput: StateFlow<String> = _ipInput
-
+    private val _ipInput = MutableStateFlow("192.168.0.1")
     private val _subnetMask = MutableStateFlow(24)
-    val subnetMask: StateFlow<Int> = _subnetMask
 
     private val _networkDetails = MutableStateFlow<CalculationResult>(CalculationResult.Idle)
     val networkDetails: StateFlow<CalculationResult> = _networkDetails

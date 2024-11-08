@@ -1,5 +1,7 @@
 package id.my.andka.bstkj.model
 
+import androidx.navigation.NavHost
+
 
 sealed class CalculationResult {
     object Idle : CalculationResult()
@@ -27,14 +29,14 @@ data class IPRange(
 data class NetworkDetail(
     val networkClass: String,
     val totalSubnets: Long,
-    val hostsPerSubnet: Long,
+    val usableHosts: Long,
     val networkAddress: String,
-    val firstHost: String,
-    val lastHost: String,
+    val firstHostAddress: String,
+    val lastHostAddress: String,
     val broadcastAddress: String,
-    val ipBinary: String,
-    val subnetBinary: String,
-    val wildcardBinary: String
+    val binaryNetworkAddress: String,
+    val binaryNetmask: String,
+    val binaryWildcardMask: String,
 )
 
 data class IPv4Result(
