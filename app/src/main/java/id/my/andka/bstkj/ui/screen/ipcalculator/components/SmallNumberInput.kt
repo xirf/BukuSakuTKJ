@@ -15,7 +15,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import id.my.andka.bstkj.ui.theme.BsTKJTheme
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.platform.LocalFocusManager
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SmallNumberInput(
     label: String,
@@ -25,6 +32,8 @@ fun SmallNumberInput(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val focusManager = LocalFocusManager.current
+
     TextField(
         value = value,
         keyboardOptions = KeyboardOptions.Default.copy(
@@ -33,14 +42,31 @@ fun SmallNumberInput(
         ),
         onValueChange = { newValue: String ->
             val intValue = newValue.toIntOrNull()
-            if (intValue != null && intValue in min..max) {
-                onValueChange(newValue)
+
+            if (intValue != null) {
+                if (intValue in min..max) {
+                    onValueChange(newValue)
+                    if (newValue.length == 3) {
+                        focusManager.moveFocus(FocusDirection.Next)
+                    }
+                } else if (intValue > max) {
+                    focusManager.moveFocus(FocusDirection.Next)
+                }
             }
         },
         singleLine = true,
         placeholder = { Text(text = label) },
         shape = RoundedCornerShape(16.dp),
-        modifier = modifier.width(64.dp),
+        modifier = modifier
+            .width(64.dp)
+            .onKeyEvent { keyEvent ->
+                if (keyEvent.key == Key.Period) {
+                    focusManager.moveFocus(FocusDirection.Next)
+                    true
+                } else {
+                    false
+                }
+            },
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,

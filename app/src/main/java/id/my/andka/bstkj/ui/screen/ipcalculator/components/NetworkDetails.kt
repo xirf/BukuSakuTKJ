@@ -1,5 +1,6 @@
 package id.my.andka.bstkj.ui.screen.ipcalculator.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
@@ -26,11 +27,17 @@ fun NetworkDetails(
             }
             is CalculationResult.Success -> {
                 val details = (networkDetails as CalculationResult.Success).result
-                Text(text = "Network Address: ${details.networkDetail.networkAddress}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Network Address: ${details.ipAddress}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Network Address (Binary): ${details.ipAddressBinary}", style = MaterialTheme.typography.bodyMedium)
                 Text(text = "Broadcast Address: ${details.broadcastAddress}", style = MaterialTheme.typography.bodyMedium)
-                Text(text = "First Host: ${details.networkDetail.firstHost}", style = MaterialTheme.typography.bodyMedium)
-                Text(text = "Last Host: ${details.networkDetail.lastHost}", style = MaterialTheme.typography.bodyMedium)
-                Text(text = "Total Hosts: ${details.networkDetail.totalSubnets}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Subnet Mask: ${details.subnetMask}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Subnet Mask (Binary): ${details.subnetMaskBinary}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Wildcard Mask: ${details.wildcardMask}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "First Host: ${details.firstHost}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Last Host: ${details.lastHost}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Class: ${details.ipClass}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Effective Subnets: ${details.effectiveSubnets}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Effective Hosts: ${details.effectiveHostsPerSubnet}", style = MaterialTheme.typography.bodyMedium)
             }
             is CalculationResult.Failure -> {
                 Text(text = "Error: ${(networkDetails as CalculationResult.Failure).error}", style = MaterialTheme.typography.bodyMedium)

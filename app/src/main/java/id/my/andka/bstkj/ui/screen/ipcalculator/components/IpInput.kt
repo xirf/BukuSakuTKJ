@@ -4,15 +4,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
 
 @Composable
@@ -35,58 +33,30 @@ fun IpInput(
         }
     }
 
+    @Composable
+    fun IpSegmentInput(value: String, onValueChange: (String) -> Unit, label: String) {
+        SmallNumberInput(
+            label = label,
+            value = value,
+            onValueChange = {
+                    onValueChange(it)
+                    triggerIpChanged()
+            }
+        )
+    }
+
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        SmallNumberInput(
-            label = "192",
-            value = input1,
-            onValueChange = {
-                if (it.length <= 3) {
-                    input1 = it
-                    if (it.length == 3) focusManager.moveFocus(FocusDirection.Next)
-                    triggerIpChanged()
-                }
-            }
-        )
+        IpSegmentInput(value = input1, onValueChange = { input1 = it }, label = "192")
         Text(".")
-        SmallNumberInput(
-            label = "168",
-            value = input2,
-            onValueChange = {
-                if (it.length <= 3) {
-                    input2 = it
-                    if (it.length == 3) focusManager.moveFocus(FocusDirection.Next)
-                    triggerIpChanged()
-                }
-            }
-        )
+        IpSegmentInput(value = input2, onValueChange = { input2 = it }, label = "168")
         Text(".")
-        SmallNumberInput(
-            label = "0",
-            value = input3,
-            onValueChange = {
-                if (it.length <= 3) {
-                    input3 = it
-                    if (it.length == 3) focusManager.moveFocus(FocusDirection.Next)
-                    triggerIpChanged()
-                }
-            }
-        )
+        IpSegmentInput(value = input3, onValueChange = { input3 = it }, label = "0")
         Text(".")
-        SmallNumberInput(
-            label = "1",
-            value = input4,
-            onValueChange = {
-                if (it.length <= 3) {
-                    input4 = it
-                    if (it.length == 3) focusManager.moveFocus(FocusDirection.Next)
-                    triggerIpChanged()
-                }
-            }
-        )
+        IpSegmentInput(value = input4, onValueChange = { input4 = it }, label = "1")
         Text("/")
         SmallNumberInput(
             label = "24",

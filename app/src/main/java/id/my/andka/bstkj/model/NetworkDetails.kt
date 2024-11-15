@@ -1,12 +1,12 @@
 package id.my.andka.bstkj.model
 
-import androidx.navigation.NavHost
+import android.R
 
 
 sealed class CalculationResult {
     object Idle : CalculationResult()
-    data class Success(val result: IPv4Result) : CalculationResult()
-    data class Failure(val error: IPv4Error) : CalculationResult()
+    data class Success(val result: NetworkDetail) : CalculationResult()
+    data class Failure(val error: String) : CalculationResult()
 }
 
 data class IPv4Error(
@@ -27,16 +27,17 @@ data class IPRange(
 )
 
 data class NetworkDetail(
-    val networkClass: String,
-    val totalSubnets: Long,
-    val usableHosts: Long,
-    val networkAddress: String,
-    val firstHostAddress: String,
-    val lastHostAddress: String,
+    val ipAddress: String,
+    val ipAddressBinary: String,
+    val ipClass: String,
+    val subnetMask: String,
     val broadcastAddress: String,
-    val binaryNetworkAddress: String,
-    val binaryNetmask: String,
-    val binaryWildcardMask: String,
+    val subnetMaskBinary: String,
+    val wildcardMask: String,
+    val firstHost: String,
+    val lastHost: String,
+    val effectiveSubnets: Int,
+    val effectiveHostsPerSubnet: Int
 )
 
 data class IPv4Result(
