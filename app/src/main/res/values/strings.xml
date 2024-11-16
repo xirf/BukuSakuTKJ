@@ -4,5 +4,7 @@
     <string name="about">Tentang</string>
     <string name="settings">Pengaturan</string>
     <string name="exit_cancel">Batal</string>
-    <string name="ip_calculator">Kalkulator IP</string>
+    <string name="ip_calculator">Subneting</string>
+    <string name="inter_ip_or_subnet">Masukkan IP atau Ubah Subnet</string>
+    <string name="number_system">Sistem Bilangan</string>
 </resources>

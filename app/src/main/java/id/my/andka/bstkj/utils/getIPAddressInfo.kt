@@ -24,11 +24,11 @@ fun getIPAddressInfo(ipAddressString: String): CalculationResult {
 
         val ipInfo = NetworkDetail(
             ipAddress = ipAddress.toCanonicalHostName().toNormalizedString().removeSlash(),
-            ipAddressBinary = ipAddress.toBinaryString(),
+            ipAddressBinary = ipAddress.toFormattedBinaryString(),
             ipClass = getIPClass(ipAddress),
             subnetMask = ipAddress.getNetworkMask().toCanonicalString().removeSlash(),
-            subnetMaskBinary = ipAddress.getNetworkMask().toBinaryString(),
-            wildcardMask = ipAddress.toCanonicalWildcardString(),
+            subnetMaskBinary = ipAddress.getNetworkMask().toFormattedBinaryString(),
+            wildcardMask = ipAddress.networkMask.toString().removeSlash().split(".").reversed().joinToString("."),
             firstHost = ipAddress.lower.toCanonicalString().removeSlash(),
             lastHost = ipAddress.upper.toCanonicalString().removeSlash(),
             effectiveSubnets = 2.0.pow((32 - subnetMask).toDouble()).toInt(),
@@ -41,6 +41,10 @@ fun getIPAddressInfo(ipAddressString: String): CalculationResult {
         Log.e("IPCalculator", "Error calculating IP Address Info", e)
         return CalculationResult.Failure(e.message ?: "Unknown error")
     }
+}
+
+private fun IPAddress.toFormattedBinaryString(): String {
+    return this.toBinaryString().replace("(.{8})".toRegex(), "$1 ").trim()
 }
 
 private fun String.removeSlash(): String {

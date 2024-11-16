@@ -15,6 +15,7 @@ import id.my.andka.bstkj.ui.navigation.Screen
 import id.my.andka.bstkj.ui.navigation.composableWithTransitions
 import id.my.andka.bstkj.ui.screen.home.HomeScreen
 import id.my.andka.bstkj.ui.screen.ipcalculator.IPCalculatorScreen
+import id.my.andka.bstkj.ui.screen.numbersystem.NumberSystemScreen
 import id.my.andka.bstkj.ui.theme.BsTKJTheme
 
 
@@ -44,6 +45,9 @@ fun BsTKJContent(
 
             composableWithTransitions(Screen.IpCalculator.route) {
                 IPCalculatorScreen()
+            }
+            composableWithTransitions(Screen.NumberSystem.route) {
+                NumberSystemScreen()
             }
         }
     }

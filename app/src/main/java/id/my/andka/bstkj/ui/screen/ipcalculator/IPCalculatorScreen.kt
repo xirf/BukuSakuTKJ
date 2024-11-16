@@ -3,10 +3,13 @@ package id.my.andka.bstkj.ui.screen.ipcalculator
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -18,6 +21,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import id.my.andka.bstkj.R
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,55 +31,62 @@ import id.my.andka.bstkj.ui.theme.BsTKJTheme
 import id.my.andka.bstkj.ui.screen.ipcalculator.components.IpInput
 import id.my.andka.bstkj.ui.screen.ipcalculator.components.NetworkDetails
 import id.my.andka.bstkj.ui.screen.ipcalculator.components.SubnetInput
+import inet.ipaddr.IPAddressString
 
 @Composable
 fun IPCalculatorScreen(
-    modifier: Modifier = Modifier,
-    viewModel: IpCalculatorViewModel = IpCalculatorViewModel.instance
+    modifier: Modifier = Modifier, viewModel: IpCalculatorViewModel = IpCalculatorViewModel.instance
 ) {
     var subnetMask by remember { mutableIntStateOf(24) }
 
-
-    Column(
+    LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.background)
+        ,
+        contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = stringResource(R.string.ip_calculator),
-            style = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Black
+        item {
+            Text(
+                text = stringResource(R.string.ip_calculator),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 24.sp, fontWeight = FontWeight.Black
+                )
             )
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Alamat IPv4",
-            style = MaterialTheme.typography.titleMedium
-        )
-        IpInput(
-            onIpChanged = { address, subnet ->
-                viewModel.onIpInputChange(address)
-                viewModel.onSubnetMaskChange(subnet)
-            },
-            onSubnetChanged = { subnet ->
-                subnetMask = subnet
-                viewModel.onSubnetMaskChange(subnet)
-            },
-            subnet = subnetMask
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        SubnetInput(
-            onMaskSelected = {
-                subnetMask = it
-                viewModel.onSubnetMaskChange(it)
-            },
-            netMask = subnetMask
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        NetworkDetails(viewModel = viewModel)
+        }
+        item {
+            Text(
+                text = "Alamat IPv4",
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            IpInput(
+                onIpChanged = { address, subnet ->
+                    if(IPAddressString(address).isValid()) {
+                        viewModel.onIpInputChange(address)
+                    }
+                    viewModel.onSubnetMaskChange(subnet)
+                },
+                onSubnetChanged = { subnet ->
+                    subnetMask = subnet
+                    viewModel.onSubnetMaskChange(subnet)
+                },
+                subnet = subnetMask,
+            )
+        }
+        item {
+            SubnetInput(
+                onMaskSelected = {
+                    subnetMask = it
+                    viewModel.onSubnetMaskChange(it)
+                },
+                netMask = subnetMask,
+            )
+        }
+        item {
+            NetworkDetails(viewModel = viewModel)
+        }
     }
 }
 

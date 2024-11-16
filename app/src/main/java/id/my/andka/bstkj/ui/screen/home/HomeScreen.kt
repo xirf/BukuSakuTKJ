@@ -27,16 +27,21 @@ import id.my.andka.bstkj.ui.components.ToolCard
 import id.my.andka.bstkj.ui.theme.BsTKJTheme
 
 data class Tool(
-    val title: String,
+    val title: Int,
     val icon: Int,
     val route: String
 )
 
 private val toolCards = listOf(
     Tool(
-        title = "IP Calculator",
+        title = R.string.ip_calculator,
         icon = R.drawable.i_wireless_color,
         route = "ip_calculator"
+    ),
+    Tool(
+        title = R.string.number_system,
+        icon = R.drawable.i_numbers_color,
+        route = "number_system"
     )
 )
 
@@ -58,7 +63,7 @@ fun HomeScreen(
         )
         Spacer(modifier = Modifier.height(8.dp))
         LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Adaptive(200.dp),
+            columns = StaggeredGridCells.Adaptive(150.dp),
             contentPadding = PaddingValues(0.dp),
             verticalItemSpacing = 8.dp,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -66,7 +71,7 @@ fun HomeScreen(
             content = {
                 items(toolCards) { tool ->
                     ToolCard(
-                        title = tool.title,
+                        title = stringResource(id = tool.title),
                         icon = ImageVector.vectorResource(id = tool.icon),
                         onClick = {
                             navController.navigate(tool.route)
