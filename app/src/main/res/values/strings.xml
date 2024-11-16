@@ -7,4 +7,6 @@
     <string name="ip_calculator">Subneting</string>
     <string name="inter_ip_or_subnet">Masukkan IP atau Ubah Subnet</string>
     <string name="number_system">Sistem Bilangan</string>
+    <string name="convert">Konverter</string>
+    <string name="calculate">Kalkulator</string>
 </resources>

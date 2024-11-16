@@ -136,7 +136,6 @@ private fun OptimizedIpSegmentInput(
         )
     }
 
-    val shape = remember { RoundedCornerShape(16.dp) }
     val focusManager = LocalFocusManager.current
     TextField(
         value = value,
@@ -144,7 +143,7 @@ private fun OptimizedIpSegmentInput(
         keyboardOptions = keyboardOptions,
         singleLine = true,
         placeholder = { Text(text = label) },
-        shape = shape,
+        shape = RoundedCornerShape(8.dp),
         modifier = modifier
             .width(64.dp)
             .onKeyEvent { keyEvent ->
