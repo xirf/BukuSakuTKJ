@@ -1,18 +1,10 @@
 package id.my.andka.bstkj.model
 
-import android.R
-
-
 sealed class CalculationResult {
     object Idle : CalculationResult()
     data class Success(val result: NetworkDetail) : CalculationResult()
     data class Failure(val error: String) : CalculationResult()
 }
-
-data class IPv4Error(
-    val errorOn: String,
-    val message: String
-)
 
 data class SubnetDetail(
     val network: String,

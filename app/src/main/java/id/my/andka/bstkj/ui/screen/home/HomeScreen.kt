@@ -1,6 +1,5 @@
 package id.my.andka.bstkj.ui.screen.home
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -20,9 +19,9 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import id.my.andka.bstkj.R
+import id.my.andka.bstkj.ui.components.GreetingCard
 import id.my.andka.bstkj.ui.components.ToolCard
 import id.my.andka.bstkj.ui.theme.BsTKJTheme
 
@@ -53,20 +52,20 @@ fun HomeScreen(
     Column(
         modifier = modifier.padding(16.dp),
     ) {
+        GreetingCard()
+
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = stringResource(id = R.string.tools),
             style = MaterialTheme.typography.titleLarge.copy(
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Black
+                fontWeight = FontWeight.Bold,
             ),
-            modifier = Modifier.padding(horizontal = 8.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Adaptive(150.dp),
             contentPadding = PaddingValues(0.dp),
             verticalItemSpacing = 8.dp,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxWidth(),
             content = {
                 items(toolCards) { tool ->

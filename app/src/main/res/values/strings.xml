@@ -9,4 +9,10 @@
     <string name="number_system">Sistem Bilangan</string>
     <string name="convert">Konverter</string>
     <string name="calculate">Kalkulator</string>
+    <string name="double_tap_to_copy">*Klik dua kali untuk menyalin</string>
+    <string name="copied">Berhasil disalin</string>
+    <string name="good_morning">Selamat Pagi</string>
+    <string name="good_afternoon">Selamat Sore\n</string>
+    <string name="good_evening">Selamat Sore</string>
+    <string name="good_night">Oh, Hai</string>
 </resources>

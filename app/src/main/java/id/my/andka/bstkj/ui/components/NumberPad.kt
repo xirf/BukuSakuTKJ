@@ -63,16 +63,15 @@ fun NumberPad(
                 PadButton.Number("B")
             ),
             listOf(
+                PadButton.TripleZero,
                 PadButton.DoubleZero,
                 PadButton.Number("0"),
-                PadButton.Decimal,
                 PadButton.Number("A")
             )
         )
     }
 
-    val isButtonEnabled = remember<(PadButton) -> Boolean> {
-        { button ->
+    val isButtonEnabled: (PadButton) -> Boolean = { button ->
             when (button) {
                 is PadButton.Clear, is PadButton.Delete -> true
                 is PadButton.Number -> when (selectedSystem) {
@@ -82,7 +81,7 @@ fun NumberPad(
                     NumberSystem.HEXADECIMAL -> true
                 }
 
-                is PadButton.Decimal -> selectedSystem == NumberSystem.DECIMAL
+                is PadButton.TripleZero,
                 is PadButton.DoubleZero -> when (selectedSystem) {
                     NumberSystem.BINARY -> true
                     NumberSystem.OCTAL -> true
@@ -91,7 +90,7 @@ fun NumberPad(
                 }
             }
         }
-    }
+
 
     val buttonColors = ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,

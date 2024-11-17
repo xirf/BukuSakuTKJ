@@ -1,15 +1,35 @@
 package id.my.andka.bstkj
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowBackIosNew
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import id.my.andka.bstkj.ui.navigation.Screen
 import id.my.andka.bstkj.ui.navigation.composableWithTransitions
@@ -24,15 +44,8 @@ fun BsTKJContent(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-    val whileListedRoutes = listOf(
-        Screen.Home.route
-    )
-
     Scaffold(
         modifier = modifier,
-        bottomBar = { if (currentRoute in whileListedRoutes) BottomBar(navController = navController) },
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -44,18 +57,75 @@ fun BsTKJContent(
             }
 
             composableWithTransitions(Screen.IpCalculator.route) {
-                IPCalculatorScreen()
+                ScreenWrapper(
+                    navController = navController,
+                    title = stringResource(R.string.ip_calculator),
+                ) {
+                    IPCalculatorScreen(modifier = modifier.padding(it))
+                }
+
             }
             composableWithTransitions(Screen.NumberSystem.route) {
-                NumberSystemScreen()
+                ScreenWrapper(
+                    navController = navController,
+                    title = stringResource(R.string.number_system),
+                ) {
+                    NumberSystemScreen(modifier = modifier.padding(it))
+                }
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BottomBar(navController: NavController) {
-    // Bottom bar
+private fun ScreenWrapper(
+    navController: NavController,
+    title: String,
+    content: @Composable (PaddingValues) -> Unit
+) {
+    Scaffold(
+        topBar = {
+            TopBar(
+                navController = navController,
+                title = title,
+            )
+        },
+        contentWindowInsets = WindowInsets(
+            top = 0.dp,
+            left = 0.dp,
+            right = 0.dp,
+            bottom = 0.dp
+        ),
+        content = content
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TopBar(
+    navController: NavController,
+    title: String,
+) {
+    TopAppBar(
+        title = {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                text = title,
+                style = MaterialTheme.typography.titleMedium
+            )
+        },
+        navigationIcon = {
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(Icons.Outlined.ArrowBackIosNew, contentDescription = "Back")
+            }
+        },
+        actions = {
+            Spacer(modifier = Modifier.width(48.dp))
+        }
+
+    )
 }
 
 // preview
