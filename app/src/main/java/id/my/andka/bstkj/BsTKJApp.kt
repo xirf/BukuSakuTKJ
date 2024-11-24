@@ -1,5 +1,6 @@
 package id.my.andka.bstkj
 
+import android.app.Application
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -31,12 +32,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
+import dagger.hilt.android.HiltAndroidApp
 import id.my.andka.bstkj.ui.navigation.Screen
 import id.my.andka.bstkj.ui.navigation.composableWithTransitions
 import id.my.andka.bstkj.ui.screen.home.HomeScreen
 import id.my.andka.bstkj.ui.screen.ipcalculator.IPCalculatorScreen
 import id.my.andka.bstkj.ui.screen.numbersystem.NumberSystemScreen
 import id.my.andka.bstkj.ui.theme.BsTKJTheme
+
+
+
+@HiltAndroidApp
+class BsTKJApp : Application()
 
 
 @Composable

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.ksp)
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -39,39 +40,61 @@ android {
     buildFeatures {
         compose = true
     }
+    ksp {
+        arg("incremental", "false")
+    }
 
 }
-
 dependencies {
+    // Android Testing Dependencies
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.androidx.ui.tooling)
-    implementation (libs.compose.markdown)
-    implementation (libs.converter.gson)
-    implementation (libs.kotlinx.coroutines.android)
-    implementation (libs.retrofit)
-    implementation(libs.accompanist.placeholder.material)
+    implementation(platform(libs.androidx.compose.bom)) // Compose BOM for version management
+
+    // Compose UI Dependencies
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material.material.icons.extended)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.material.icons.core)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.coil.compose)
-    implementation(libs.dagger)
-    implementation(libs.ipaddress)
-    implementation(platform(libs.androidx.compose.bom))
+
+    // Networking and Serialization
+    implementation(libs.converter.gson)
+    implementation(libs.retrofit)
+    implementation(libs.kotlinx.serialization.json)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+
+    // Room Database
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
-    ksp(libs.dagger.compiler)
+
+    // Dependency Injection
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    ksp(libs.dagger.compiler) // Dagger compiler
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    // Lifecycle and Activity
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    // Markdown Support
+    implementation(libs.compose.markdown)
+
+    // IP Address Handling
+    implementation(libs.ipaddress)
+
+    // Unit Testing Dependencies
     testImplementation(libs.junit)
 }
