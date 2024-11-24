@@ -30,6 +30,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -79,10 +80,9 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     // Dependency Injection
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    ksp(libs.dagger.compiler) // Dagger compiler
-    ksp(libs.hilt.compiler)
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    ksp("com.google.dagger:hilt-compiler:2.51.1")
+    ksp(libs.dagger.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
     // Lifecycle and Activity

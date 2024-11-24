@@ -1,5 +1,6 @@
 package id.my.andka.bstkj.ui.screen.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,11 +24,17 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchArticles() {
         viewModelScope.launch {
-            articles = repository.getCachedArticles()
-            if (articles.isEmpty()) {
-                articles = repository.getArticles()
+            try {
+                articles = repository.getCachedArticles()
+                if (articles.isEmpty()) {
+                    articles = repository.getArticles()
+                }
+                fetchGroups()
+            } catch (e: Exception) {
+                Log.e("VIEWMODEL", e.message, e)
+                articles = emptyList()
+                groups = emptyList()
             }
-            fetchGroups()
         }
     }
 

@@ -60,7 +60,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
 
-    val group = viewModel.groups
+//    val group = viewModel.groups
 
     Column(
         modifier = modifier.padding(16.dp),
@@ -77,39 +77,39 @@ fun HomeScreen(
             ),
         )
 
-        LazyHorizontalStaggeredGrid(
-            rows = StaggeredGridCells.Fixed(2),
-            contentPadding = PaddingValues(0.dp),
-            horizontalItemSpacing = 8.dp,
-            modifier = Modifier.fillMaxWidth(),
-            content = {
-                items(group) { groupName ->
-                    Box(
-                        modifier = modifier
-                            .padding(8.dp)
-                            .shadow(
-                                elevation = 8.dp,
-                                shape = RoundedCornerShape(16.dp),
-                                ambientColor = MaterialTheme.colorScheme.surfaceContainerHighest,
-                                spotColor = MaterialTheme.colorScheme.surfaceContainerHigh
-                            )
-                            .background(
-                                color = MaterialTheme.colorScheme.surfaceContainer,
-                                shape = RoundedCornerShape(16.dp)
-                            )
-                            .clickable { }
-                            .padding(16.dp),
-                        contentAlignment = Alignment.TopStart
-                    ) {
-                        Text(
-                            text = groupName,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
-            }
-        )
+//        LazyHorizontalStaggeredGrid(
+//            rows = StaggeredGridCells.Fixed(2),
+//            contentPadding = PaddingValues(0.dp),
+//            horizontalItemSpacing = 8.dp,
+//            modifier = Modifier.fillMaxWidth(),
+//            content = {
+//                items(group) { groupName ->
+//                    Box(
+//                        modifier = modifier
+//                            .padding(8.dp)
+//                            .shadow(
+//                                elevation = 8.dp,
+//                                shape = RoundedCornerShape(16.dp),
+//                                ambientColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+//                                spotColor = MaterialTheme.colorScheme.surfaceContainerHigh
+//                            )
+//                            .background(
+//                                color = MaterialTheme.colorScheme.surfaceContainer,
+//                                shape = RoundedCornerShape(16.dp)
+//                            )
+//                            .clickable { }
+//                            .padding(16.dp),
+//                        contentAlignment = Alignment.TopStart
+//                    ) {
+//                        Text(
+//                            text = groupName,
+//                            style = MaterialTheme.typography.titleMedium,
+//                            color = MaterialTheme.colorScheme.onSurface
+//                        )
+//                    }
+//                }
+//            }
+//        )
 
 
         Spacer(modifier = Modifier.height(16.dp))
