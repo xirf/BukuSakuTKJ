@@ -70,6 +70,8 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.retrofit)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
@@ -80,8 +82,8 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     // Dependency Injection
-    implementation("com.google.dagger:hilt-android:2.51.1")
-    ksp("com.google.dagger:hilt-compiler:2.51.1")
+    implementation(libs.hilt.android.v2511)
+    ksp(libs.hilt.compiler)
     ksp(libs.dagger.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 

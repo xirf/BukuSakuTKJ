@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import id.my.andka.bstkj.data.AppDatabase
-import id.my.andka.bstkj.data.ArticleApiService
+import id.my.andka.bstkj.data.source.remote.ArticleApiService
 import id.my.andka.bstkj.data.ArticleRepository
 import id.my.andka.bstkj.data.source.local.ArticleDao
 import retrofit2.Retrofit
