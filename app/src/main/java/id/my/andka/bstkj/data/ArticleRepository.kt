@@ -1,76 +1,37 @@
 package id.my.andka.bstkj.data
 
-import android.util.Log
 import id.my.andka.bstkj.data.source.local.ArticleDao
-import id.my.andka.bstkj.data.source.remote.ApiClient
-import id.my.andka.bstkj.data.source.remote.ArticleApiService
-import id.my.andka.bstkj.ui.common.UiState
+import id.my.andka.bstkj.data.source.remote.ApiService
+import id.my.andka.bstkj.domain.interfaces.ArticleRepositoryInterface
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class ArticleRepository @Inject constructor(
+    private val apiService: ApiService,
     private val articleDao: ArticleDao
-) {
-    private val apiService = ApiClient.articleApiService
+) : ArticleRepositoryInterface {
 
-    fun getArticles(): Flow<UiState<List<Article>>> = flow {
-        emit(UiState.Loading())
-        try {
-            val data = apiService.fetchArticles()
-            Log.d("ArticleRepository", "getArticles: ${data.spliterator().estimateSize()}")
-            insertArticles(data)
-            emit(UiState.Success(data))
-        } catch (e: Exception) {
-            emit(UiState.Error("Failed to fetch data: ${e.message}"))
-        }
+    override suspend fun getArticles(): Flow<List<Article>> = flow {
+        val data = apiService.fetchArticles()
+        insertArticles(data)
+        emit(data)
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun getCachedArticles(): Flow<List<Article>> {
+        TODO("Not yet implemented")
     }
 
-    fun getCachedArticles(): Flow<UiState<List<Article>>> = flow {
-        emit(UiState.Loading())
-        try {
-            val data = articleDao.getAllArticles()
-            emit(UiState.Success(data))
-        } catch (e: Exception) {
-            emit(UiState.Error("Failed to fetch data: ${e.message}"))
-        }
+    override suspend fun getGroups(): Flow<List<String>> = flow{
+        val groups = articleDao.getAllGroup()
+        emit(groups)
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun insertArticles(articles: List<Article>) {
+        articleDao.insertArticles(articles)
     }
 
-    suspend fun insertArticles(articles: List<Article>) {
-        withContext(Dispatchers.IO) {
-            articleDao.insertArticles(articles)
-        }
-    }
 
-    fun getArticlesByGroup(groupName: String): Flow<UiState<List<Article>>> = flow {
-        emit(UiState.Loading())
-        try {
-            val data = articleDao.getArticlesByGroup(groupName)
-            emit(UiState.Success(data))
-        } catch (e: Exception) {
-            emit(UiState.Error("Failed to fetch data: ${e.message}"))
-        }
-    }
-
-    fun getArticleById(id: String): Flow<UiState<Article>> = flow {
-        emit(UiState.Loading())
-        try {
-            val data = articleDao.getArticleById(id)
-            emit(UiState.Success(data))
-        } catch (e: Exception) {
-            emit(UiState.Error("Failed to fetch data: ${e.message}"))
-        }
-    }
-
-    fun getGroup(): Flow<UiState<List<String>>> = flow {
-        emit(UiState.Loading())
-        try {
-            val data = articleDao.getAllGroup()
-            emit(UiState.Success(data))
-        } catch (e: Exception) {
-            emit(UiState.Error("Failed to fetch data: ${e.message}"))
-        }
-    }
 }

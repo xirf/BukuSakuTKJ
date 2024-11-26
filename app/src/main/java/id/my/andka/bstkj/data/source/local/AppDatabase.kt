@@ -1,13 +1,13 @@
-package id.my.andka.bstkj.data
+package id.my.andka.bstkj.data.source.local
 
 import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
 import android.content.Context
-import id.my.andka.bstkj.data.source.local.ArticleDao
+import id.my.andka.bstkj.data.Article
+import androidx.room.RoomDatabase
+import androidx.room.Room
 
 @Database(entities = [Article::class], version = 1)
-abstract class AppDatabase : RoomDatabase() {
+abstract class AppDatabase : androidx.room.RoomDatabase() {
     abstract fun articleDao(): ArticleDao
 
     companion object {

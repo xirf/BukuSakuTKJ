@@ -6,8 +6,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import id.my.andka.bstkj.data.AppDatabase
-import id.my.andka.bstkj.data.source.remote.ArticleApiService
+import id.my.andka.bstkj.data.source.local.AppDatabase
+import id.my.andka.bstkj.data.source.remote.ApiService
 import id.my.andka.bstkj.data.ArticleRepository
 import id.my.andka.bstkj.data.source.local.ArticleDao
 import retrofit2.Retrofit
@@ -19,12 +19,12 @@ import javax.inject.Singleton
 object AppModule {
 
     @Provides
-    fun provideApiService(): ArticleApiService {
+    fun provideApiService(): ApiService {
         return Retrofit.Builder()
             .baseUrl("https://bstkj.andka.my.id/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(ArticleApiService::class.java)
+            .create(ApiService::class.java)
     }
 
     @Provides
@@ -44,7 +44,7 @@ object AppModule {
     }
 
     @Provides
-    fun provideArticleRepository(apiService: ArticleApiService, articleDao: ArticleDao): ArticleRepository {
+    fun provideArticleRepository(apiService: ApiService, articleDao: ArticleDao): ArticleRepository {
         return ArticleRepository(
             apiService = apiService,
             articleDao = articleDao

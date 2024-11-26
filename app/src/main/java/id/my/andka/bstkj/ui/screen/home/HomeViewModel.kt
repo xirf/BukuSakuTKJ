@@ -10,6 +10,7 @@ import id.my.andka.bstkj.ui.common.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,33 +19,36 @@ class HomeViewModel @Inject constructor(
     private val repository: ArticleRepository
 ) : ViewModel() {
 
-    private val _articles: MutableStateFlow<UiState<List<Article>>> =
-        MutableStateFlow(UiState.Idle())
-    private val _groups: MutableStateFlow<UiState<List<String>>> = MutableStateFlow(UiState.Idle())
-    val articles: StateFlow<UiState<List<Article>>> get() = _articles
-    val groups: StateFlow<UiState<List<String>>> get() = _groups
+    data class ArticleState(
+        val articleResult: UiState<List<Article>> = UiState.Loading(),
+        val groupResult: UiState<List<String>> = UiState.Loading()
+    )
+
+    private val _viewModelResult = MutableStateFlow(ArticleState())
+    val viewModelResult: StateFlow<ArticleState> =  _viewModelResult
 
     init {
-        _groups.value = UiState.Loading()
-        _articles.value = UiState.Loading()
-        fetchArticles()
+        fetchGroups()
     }
 
     private fun fetchArticles() {
         viewModelScope.launch {
-            repository.getArticles().collect { uiState ->
-                _articles.value = uiState
-                Log.d("HomeViewModel", "fetchArticles: ${uiState.data}")
+            repository.getArticles().collect { articles ->
+                _viewModelResult.update { it.copy(articleResult = UiState.Success(articles)) }
+                Log.d("HomeViewModel", "fetchArticles: $articles")
             }
         }
     }
 
-    private fun fetchGroups() {
+    private fun fetchGroups(tries: Int = 5) {
         viewModelScope.launch {
-            repository.getGroup().catch {
-                _groups.value = UiState.Error("Failed to fetch data: ${it.message}")
-            }.collect {
-                _groups.value = it
+            repository.getGroups().collect{ groups ->
+                if(groups.isEmpty() && tries != 0){
+                    fetchArticles()
+                    fetchGroups(tries - 1)
+                }else {
+                    _viewModelResult.update { it.copy(groupResult = UiState.Success(groups)) }
+                }
             }
         }
     }

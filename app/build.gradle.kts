@@ -40,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     ksp {
         arg("incremental", "false")
@@ -53,7 +54,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.androidx.ui.tooling)
-    implementation(platform(libs.androidx.compose.bom)) // Compose BOM for version management
+    implementation(platform(libs.androidx.compose.bom))
 
     // Compose UI Dependencies
     implementation(libs.androidx.activity.compose)
@@ -82,7 +83,7 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     // Dependency Injection
-    implementation(libs.hilt.android.v2511)
+    implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     ksp(libs.dagger.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
