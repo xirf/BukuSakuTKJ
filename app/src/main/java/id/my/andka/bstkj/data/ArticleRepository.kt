@@ -24,9 +24,14 @@ class ArticleRepository @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getGroups(): Flow<List<String>> = flow{
+    override suspend fun getGroups(): Flow<List<String>> = flow {
         val groups = articleDao.getAllGroup()
         emit(groups)
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun getArticlesByGroup(group: String): Flow<List<Article>> = flow {
+        val articles = articleDao.getArticlesByGroup(group)
+        emit(articles)
     }.flowOn(Dispatchers.IO)
 
     override suspend fun insertArticles(articles: List<Article>) {

@@ -40,6 +40,16 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun getArticlesByGroup(group: String) {
+        viewModelScope.launch {
+            repository.getArticlesByGroup(group).catch { e ->
+                _viewModelResult.update { it.copy(articleResult = UiState.Error(e.message.toString())) }
+            }.collect { articles ->
+                _viewModelResult.update { it.copy(articleResult = UiState.Success(articles)) }
+            }
+        }
+    }
+
     private fun fetchGroups(tries: Int = 5) {
         viewModelScope.launch {
             repository.getGroups().collect{ groups ->
