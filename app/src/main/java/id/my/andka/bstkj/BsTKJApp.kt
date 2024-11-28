@@ -1,11 +1,8 @@
 package id.my.andka.bstkj
 
 import android.app.Application
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -13,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.ArrowBackIosNew
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -31,19 +27,79 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.lifecycle.LiveData
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navArgument
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
 import id.my.andka.bstkj.ui.navigation.Screen
 import id.my.andka.bstkj.ui.navigation.composableWithTransitions
+import id.my.andka.bstkj.ui.screen.detail.DetailScreen
 import id.my.andka.bstkj.ui.screen.home.HomeScreen
 import id.my.andka.bstkj.ui.screen.ipcalculator.IPCalculatorScreen
 import id.my.andka.bstkj.ui.screen.numbersystem.NumberSystemScreen
+import id.my.andka.bstkj.ui.screen.other.PrivacyPolicyScreen
+import id.my.andka.bstkj.ui.screen.other.TosScreen
 import id.my.andka.bstkj.ui.theme.BsTKJTheme
-
+import id.my.andka.bstkj.worker.FetchArticlesWorker
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 
 @HiltAndroidApp
-class BsTKJApp : Application()
+class BsTKJApp : Application() {
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
+
+    override fun onCreate() {
+        super.onCreate()
+        scheduleFetchArticles()
+        observeWorker(this)
+    }
+
+    val constraints = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .build()
+
+    val workRequest = PeriodicWorkRequestBuilder<FetchArticlesWorker>(10, TimeUnit.DAYS)
+        .setConstraints(constraints)
+        .build()
+
+    private fun scheduleFetchArticles() {
+
+
+
+        WorkManager
+            .getInstance(this)
+            .enqueueUniquePeriodicWork(
+                "FetchArticlesWorker",
+                ExistingPeriodicWorkPolicy.KEEP,
+                workRequest
+            )
+    }
+
+
+    fun observeWorker(context: Context) {
+        val workManager = WorkManager.getInstance(context)
+        val workInfoLiveData: LiveData<List<WorkInfo>> = workManager.getWorkInfosForUniqueWorkLiveData(workRequest.stringId)
+
+        workInfoLiveData.observeForever { workInfos ->
+            if (workInfos.isNullOrEmpty()) {
+                return@observeForever
+            }
+
+            val workInfo = workInfos[0]
+            Log.d("WorkInfo", "${workInfo.state}")
+        }
+    }
+}
 
 
 @Composable
@@ -54,14 +110,40 @@ fun BsTKJContent(
     Scaffold(
         modifier = modifier,
     ) { innerPadding ->
+
         NavHost(
             navController = navController,
             startDestination = Screen.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
             composableWithTransitions(Screen.Home.route) {
-                HomeScreen(navController = navController)
+                HomeScreen(
+                    navController = navController,
+                    onArticleClick = { slug, title ->
+                        navController.navigate(Screen.Detail.createRoute(slug, title))
+                    })
             }
+
+            composableWithTransitions(
+                Screen.Detail.route,
+                arguments = listOf(
+                    navArgument("slug") { type = NavType.StringType },
+                    navArgument("title") { type = NavType.StringType }
+                )
+            ) {
+                val slug = it.arguments?.getString("slug")
+                val title = it.arguments?.getString("title")
+                ScreenWrapper(
+                    navController = navController,
+                    title = title ?: slug ?: "",
+                ) {
+                    DetailScreen(
+                        slug = slug ?: "",
+                        modifier = modifier.padding(it)
+                    )
+                }
+            }
+
 
             composableWithTransitions(Screen.IpCalculator.route) {
                 ScreenWrapper(
@@ -70,8 +152,26 @@ fun BsTKJContent(
                 ) {
                     IPCalculatorScreen(modifier = modifier.padding(it))
                 }
-
             }
+
+            composableWithTransitions(Screen.Tos.route) {
+                ScreenWrapper(
+                    navController = navController,
+                    title = stringResource(R.string.tos),
+                ) {
+                    TosScreen(modifier = modifier.padding(it))
+                }
+            }
+
+            composableWithTransitions(Screen.PrivacyPolicy.route) {
+                ScreenWrapper(
+                    navController = navController,
+                    title = stringResource(R.string.privacy_policy),
+                ) {
+                    PrivacyPolicyScreen(modifier = modifier.padding(it))
+                }
+            }
+
             composableWithTransitions(Screen.NumberSystem.route) {
                 ScreenWrapper(
                     navController = navController,

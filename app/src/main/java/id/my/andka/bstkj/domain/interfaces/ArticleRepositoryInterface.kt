@@ -8,5 +8,6 @@ interface  ArticleRepositoryInterface {
     suspend fun getCachedArticles(): Flow<List<Article>>
     suspend fun getGroups(): Flow<List<String>>
     suspend fun getArticlesByGroup(group: String): Flow<List<Article>>
+    suspend fun getArticleBySlug(slug: String): Flow<Article>
     suspend fun insertArticles(articles: List<Article>): Unit
 }

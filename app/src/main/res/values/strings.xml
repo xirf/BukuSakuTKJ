@@ -12,8 +12,35 @@
     <string name="double_tap_to_copy">*Klik dua kali untuk menyalin</string>
     <string name="copied">Berhasil disalin</string>
     <string name="good_morning">Selamat Pagi</string>
-    <string name="good_afternoon">Selamat Sore\n</string>
+    <string name="good_afternoon">Selamat Siang</string>
     <string name="good_evening">Selamat Sore</string>
     <string name="good_night">Oh, Hai</string>
     <string name="lesson">Pelajari</string>
+    <string name="sync">Perbaharui Materi</string>
+    <string name="privacy_policy">Kebijakan Privasi</string>
+    <string name="tos">Persyaratan Layanan</string>
+    <string name="exit">Keluar</string>
+    <string name="tos_content">## Aplikasi Buku Saku TKJ\n### 1. Tujuan dan Layanan\n**Buku Saku TKJ** merupakan aplikasi yang dirancang sebagai media pembelajaran dan alat bantu untuk kegiatan yang berkaitan dengan Teknik Komputer dan Jaringan (TKJ), seperti subnetting dan konversi sistem bilangan. Aplikasi ini disediakan secara **gratis** bagi siswa serta pengguna umum yang berminat menggunakannya.\n### 2. Pembaruan Materi\nAplikasi ini akan secara otomatis melakukan sinkronisasi data setiap 10 (sepuluh) hari untuk memastikan bahwa materi pembelajaran selalu diperbarui. Proses sinkronisasi hanya melibatkan pengunduhan materi terbaru dari server kami tanpa mengumpulkan data pengguna.\n### 3. Hak Cipta dan Konten\nSeluruh konten dalam aplikasi ini dilisensikan di bawah **Apache License 2.0**. Materi yang berasal dari sumber pihak ketiga telah dicantumkan atribusinya sesuai ketentuan sumber asli. Pengguna diwajibkan menghormati ketentuan hak cipta yang berlaku.\n### 4. Pembatasan Penggunaan\nPengguna tidak diperbolehkan menggunakan aplikasi ini untuk aktivitas yang melanggar hukum atau bersifat ilegal. Segala kerugian, kerusakan, atau konsekuensi hukum yang timbul akibat penyalahgunaan aplikasi sepenuhnya menjadi tanggung jawab pengguna.\n### 5. Integrasi Layanan Pihak Ketiga\nAplikasi ini melakukan integrasi dengan layanan berikut:\n**bstkj.andka.my.id** untuk memperbarui materi pembelajaran.\n- **cdn.andka.my.id** untuk penyediaan gambar pendukung dalam aplikasi.\nSeluruh proses ini tidak melibatkan pengumpulan atau pengiriman data pribadi pengguna ke server pihak ketiga.\n### 6. Keakuratan Informasi\nPengembang berkomitmen untuk menyediakan informasi yang akurat dan terkini. Namun, tidak ada jaminan mengenai keakuratan, kelengkapan, atau kesesuaian informasi yang disajikan. Pengguna diimbau untuk menggunakan kebijaksanaan dalam menelaah informasi sebelum menggunakannya.\n### 7. Tanggung Jawab\nPengembang aplikasi tidak bertanggung jawab atas:\nKerusakan perangkat keras maupun perangkat lunak yang mungkin terjadi akibat penggunaan aplikasi ini.\nKesalahan atau kekeliruan dalam informasi yang disajikan.\nPengguna bertanggung jawab penuh atas keputusan yang diambil berdasarkan informasi yang tersedia dalam aplikasi.\n### 8. Ketentuan Umum\nDengan menggunakan aplikasi ini, pengguna dianggap telah membaca, memahami, dan menyetujui seluruh ketentuan yang tercantum dalam dokumen ini. Pengembang berhak mengubah ketentuan layanan sewaktu-waktu, dan setiap perubahan akan diinformasikan melalui aplikasi.\n</string>
+    <string name="privacy_policy_content">
+## 1. Pendahuluan\n
+Aplikasi **Buku Saku TKJ** menghargai privasi pengguna dan berkomitmen untuk melindungi data pribadi. Kebijakan ini menjelaskan bagaimana aplikasi ini menangani informasi yang terkait dengan pengguna.\n
+## 2. Data yang Dikumpulkan\n
+Aplikasi ini **tidak mengumpulkan data pribadi** pengguna. Seluruh fitur aplikasi dapat digunakan tanpa memerlukan pendaftaran atau pengumpulan informasi pribadi apa pun.\n
+## 3. Sinkronisasi Data\n
+Aplikasi melakukan sinkronisasi otomatis setiap 10 (sepuluh) hari untuk memperbarui materi pembelajaran. Proses ini hanya melibatkan pengunduhan data dari server berikut:\n
+- **bstkj.andka.my.id** untuk pembaruan materi.\n
+- **cdn.andka.my.id** untuk penyediaan gambar pendukung.\n
+Sinkronisasi ini tidak melibatkan pengumpulan atau pengiriman data pengguna ke server.\n
+## 4. Penggunaan Data\n
+Karena tidak ada data pengguna yang dikumpulkan, tidak ada informasi yang disimpan, digunakan, atau dibagikan kepada pihak ketiga.\n
+## 5. Keamanan Data\n
+Kami berkomitmen untuk memastikan bahwa infrastruktur server yang digunakan untuk mendukung aplikasi ini aman dari akses tidak sah. Namun, pengguna disarankan untuk tetap berhati-hati terhadap potensi risiko keamanan yang berada di luar kendali kami.\n
+## 6. Hak Pengguna\n
+Karena aplikasi ini tidak mengumpulkan data pribadi, pengguna memiliki kendali penuh atas perangkat dan informasi mereka. Tidak ada tindakan yang perlu diambil terkait penghapusan atau pengelolaan data pengguna.\n
+## 7. Perubahan Kebijakan\n
+Kami dapat mengubah kebijakan privasi ini sewaktu-waktu. Perubahan tersebut akan diberitahukan melalui aplikasi. Pengguna disarankan untuk memeriksa kebijakan privasi ini secara berkala.\n
+## 8. Kontak\n
+Apabila pengguna memiliki pertanyaan atau keluhan terkait kebijakan privasi ini, silakan menghubungi pengembang melalui alamat email berikut:\n
+**[hy@andka.my.id]**.
+    </string>
 </resources>

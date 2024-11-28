@@ -16,7 +16,6 @@ class ArticleRepository @Inject constructor(
 
     override suspend fun getArticles(): Flow<List<Article>> = flow {
         val data = apiService.fetchArticles()
-        insertArticles(data)
         emit(data)
     }.flowOn(Dispatchers.IO)
 
@@ -32,6 +31,11 @@ class ArticleRepository @Inject constructor(
     override suspend fun getArticlesByGroup(group: String): Flow<List<Article>> = flow {
         val articles = articleDao.getArticlesByGroup(group)
         emit(articles)
+    }.flowOn(Dispatchers.IO)
+
+    override suspend fun getArticleBySlug(slug: String): Flow<Article> = flow {
+        val article = articleDao.getArticleBySlug(slug)
+        emit(article)
     }.flowOn(Dispatchers.IO)
 
     override suspend fun insertArticles(articles: List<Article>) {

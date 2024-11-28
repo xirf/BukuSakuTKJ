@@ -20,6 +20,9 @@ interface ArticleDao {
     @Query("SELECT * FROM articles WHERE groupName = :groupName")
     suspend fun getArticlesByGroup(groupName: String): List<Article>
 
+    @Query("SELECT * FROM articles WHERE slug = :slug")
+    suspend fun getArticleBySlug(slug: String): Article
+
     @Query("SELECT * FROM articles WHERE id = :id")
     suspend fun getArticleById(id: String): Article
 

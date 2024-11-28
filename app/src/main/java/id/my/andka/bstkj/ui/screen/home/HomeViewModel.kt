@@ -28,37 +28,47 @@ class HomeViewModel @Inject constructor(
     val viewModelResult: StateFlow<ArticleState> =  _viewModelResult
 
     init {
+
+
         fetchGroups()
     }
 
-    private fun fetchArticles() {
+    fun fetchArticles() {
         viewModelScope.launch {
             repository.getArticles().collect { articles ->
                 _viewModelResult.update { it.copy(articleResult = UiState.Success(articles)) }
-                Log.d("HomeViewModel", "fetchArticles: $articles")
+                repository.insertArticles(articles)
             }
         }
     }
 
     fun getArticlesByGroup(group: String) {
         viewModelScope.launch {
-            repository.getArticlesByGroup(group).catch { e ->
+            try {
+                repository.getArticlesByGroup(group).catch { e ->
+                    _viewModelResult.update { it.copy(articleResult = UiState.Error(e.message.toString())) }
+                }.collect { articles ->
+                    _viewModelResult.update { it.copy(articleResult = UiState.Success(articles)) }
+                }
+            } catch (e: Exception) {
                 _viewModelResult.update { it.copy(articleResult = UiState.Error(e.message.toString())) }
-            }.collect { articles ->
-                _viewModelResult.update { it.copy(articleResult = UiState.Success(articles)) }
             }
         }
     }
 
     private fun fetchGroups(tries: Int = 5) {
         viewModelScope.launch {
-            repository.getGroups().collect{ groups ->
-                if(groups.isEmpty() && tries != 0){
-                    fetchArticles()
-                    fetchGroups(tries - 1)
-                }else {
-                    _viewModelResult.update { it.copy(groupResult = UiState.Success(groups)) }
+            try {
+                repository.getGroups().collect{ groups ->
+                    if(groups.isEmpty() && tries != 0){
+                        fetchArticles()
+                        fetchGroups(tries - 1)
+                    }else {
+                        _viewModelResult.update { it.copy(groupResult = UiState.Success(groups)) }
+                    }
                 }
+            } catch (e: Exception) {
+                _viewModelResult.update { it.copy(groupResult = UiState.Error(e.message.toString())) }
             }
         }
     }
