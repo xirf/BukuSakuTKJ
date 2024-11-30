@@ -104,4 +104,7 @@ dependencies {
     // Worker
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.hilt.work)
+
+    // Splashscreen
+    implementation(libs.androidx.core.splashscreen)
 }

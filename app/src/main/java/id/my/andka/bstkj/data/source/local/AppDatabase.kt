@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.Room
 
 @Database(entities = [Article::class], version = 1)
-abstract class AppDatabase : androidx.room.RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
     abstract fun articleDao(): ArticleDao
 
     companion object {

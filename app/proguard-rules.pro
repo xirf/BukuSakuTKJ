@@ -1,21 +1,97 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Preserve annotations
+-keepattributes *Annotation*
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Preserve class members for serialization
+-keepclassmembers class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# Preserve classes with specific annotations
+-keep @interface com.google.gson.annotations.SerializedName
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Preserve all public classes, methods, and fields
+-keep public class * {
+    public protected *;
+}
+
+# Preserve all classes that extend android.app.Activity
+-keep class * extends android.app.Activity {
+    public protected *;
+}
+
+# Preserve all classes that extend android.app.Service
+-keep class * extends android.app.Service {
+    public protected *;
+}
+
+# Preserve all classes that extend android.content.BroadcastReceiver
+-keep class * extends android.content.BroadcastReceiver {
+    public protected *;
+}
+
+# Preserve all classes that extend android.content.ContentProvider
+-keep class * extends android.content.ContentProvider {
+    public protected *;
+}
+
+# Preserve all classes that extend android.app.Application
+-keep class * extends android.app.Application {
+    public protected *;
+}
+
+# Preserve all classes that implement android.os.Parcelable
+-keep class * implements android.os.Parcelable {
+    public static final android.os.Parcelable$Creator CREATOR;
+}
+
+# Preserve all Parcelable implementations
+-keepclassmembers class * implements android.os.Parcelable {
+    static ** CREATOR;
+}
+
+# Preserve all View binding classes
+-keep class **.databinding.* {
+    *;
+}
+
+# Preserve all Hilt generated classes
+-keep class dagger.hilt.** { *; }
+-keep class * extends dagger.hilt.internal.** { *; }
+
+# Preserve Retrofit interfaces
+-keep interface * {
+    @retrofit2.http.* <methods>;
+}
+
+# Preserve Retrofit classes
+-keep class retrofit2.** { *; }
+-keep class okhttp3.** { *; }
+
+# Preserve Room database classes
+-keep class androidx.room.RoomDatabase { *; }
+
+# Preserve Room DAO classes
+-keep class * extends androidx.room.RoomDatabase {
+    public static final **_Impl INSTANCE;
+}
+
+# Preserve Room entities
+-keep @androidx.room.Entity class * { *; }
+
+# Preserve Room DAO methods
+-keepclassmembers class * {
+    @androidx.room.Dao <methods>;
+}
+
+# Preserve Kotlin coroutines
+-keep class kotlinx.coroutines.** { *; }
+
+# Preserve Kotlin serialization
+-keep class kotlinx.serialization.** { *; }
+
+# Preserve Jetpack Compose classes
+-keep class androidx.compose.** { *; }
+-keep class androidx.activity.ComponentActivity { *; }
+-keep class androidx.lifecycle.ViewModel { *; }
+-keep class androidx.lifecycle.LiveData { *; }
+-keep class androidx.lifecycle.MutableLiveData { *; }

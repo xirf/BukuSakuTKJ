@@ -106,7 +106,7 @@ fun HomeScreen(
                         onClick = { expanded = true },
                         modifier = Modifier
                             .size(48.dp)
-                            .padding(8.dp),
+                            .padding(4.dp),
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Menu,

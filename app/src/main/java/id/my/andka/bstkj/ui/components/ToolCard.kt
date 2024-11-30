@@ -71,7 +71,7 @@ fun ToolCard(
 )
 fun ToolCardPreview() {
     BsTKJTheme {
-        Surface() {
+        Surface {
             ToolCard(
                 title = "IP Calculator",
                 icon = ImageVector.vectorResource(id = R.drawable.i_wireless_color)
