@@ -14,7 +14,7 @@ interface ArticleDao {
     @Query("SELECT * FROM articles")
     suspend fun getAllArticles(): List<Article>
 
-    @Query("SELECT DISTINCT groupName FROM articles")
+    @Query("SELECT DISTINCT groupName FROM articles ORDER BY groupName")
     suspend fun getAllGroup(): List<String>
 
     @Query("SELECT * FROM articles WHERE groupName = :groupName")
@@ -26,4 +26,6 @@ interface ArticleDao {
     @Query("SELECT * FROM articles WHERE id = :id")
     suspend fun getArticleById(id: String): Article
 
+    @Query("DELETE FROM articles")
+    suspend fun clearArticles()
 }

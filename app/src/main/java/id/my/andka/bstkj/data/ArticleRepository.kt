@@ -42,5 +42,9 @@ class ArticleRepository @Inject constructor(
         articleDao.insertArticles(articles)
     }
 
+    override suspend fun clearArticles() {
+        articleDao.clearArticles()
+    }
+
 
 }

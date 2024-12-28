@@ -43,4 +43,6 @@ Kami dapat mengubah kebijakan privasi ini sewaktu-waktu. Perubahan tersebut akan
 Apabila pengguna memiliki pertanyaan atau keluhan terkait kebijakan privasi ini, silakan menghubungi pengembang melalui alamat email berikut:\n
 **[hy@andka.my.id]**.
     </string>
+    <string name="loading">Memuat</string>
+    <string name="no_content">Tidak ada materi pelajaran, coba hidupkan internet untuk melihat konten</string>
 </resources>

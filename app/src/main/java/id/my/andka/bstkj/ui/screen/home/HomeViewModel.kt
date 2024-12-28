@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import id.my.andka.bstkj.data.Article
 import id.my.andka.bstkj.data.ArticleRepository
 import id.my.andka.bstkj.ui.common.UiState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -25,11 +26,10 @@ class HomeViewModel @Inject constructor(
     )
 
     private val _viewModelResult = MutableStateFlow(ArticleState())
-    val viewModelResult: StateFlow<ArticleState> =  _viewModelResult
+    val viewModelResult: StateFlow<ArticleState> = _viewModelResult
 
     init {
-
-
+        fetchArticles()
         fetchGroups()
     }
 
@@ -37,8 +37,21 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             repository.getArticles().collect { articles ->
                 _viewModelResult.update { it.copy(articleResult = UiState.Success(articles)) }
-                repository.insertArticles(articles)
+                if (articles.isNotEmpty()) {
+                    repository.insertArticles(articles)
+                }
             }
+        }
+    }
+
+    fun clearArticles() {
+        _viewModelResult.update { it.copy(groupResult = UiState.Loading()) }
+
+        viewModelScope.launch {
+            repository.clearArticles()
+            fetchArticles()
+            delay(2000) // Just to add delay for loading state
+            fetchGroups()
         }
     }
 
@@ -56,19 +69,25 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun fetchGroups(tries: Int = 5) {
+    fun fetchGroups(tries: Int = 5) {
         viewModelScope.launch {
             try {
-                repository.getGroups().collect{ groups ->
-                    if(groups.isEmpty() && tries != 0){
+                repository.getGroups().collect { groups ->
+                    if (groups.isEmpty() && tries > 0) {
                         fetchArticles()
                         fetchGroups(tries - 1)
-                    }else {
+                    } else {
+                        Log.d("HomeViewModel", "Groups: $groups")
                         _viewModelResult.update { it.copy(groupResult = UiState.Success(groups)) }
                     }
                 }
             } catch (e: Exception) {
-                _viewModelResult.update { it.copy(groupResult = UiState.Error(e.message.toString())) }
+                if (tries > 0) {
+                    fetchGroups(tries - 1)
+                } else {
+                    Log.e("HomeViewModel", "Error fetching groups", e)
+                    _viewModelResult.update { it.copy(groupResult = UiState.Error(e.message.toString())) }
+                }
             }
         }
     }

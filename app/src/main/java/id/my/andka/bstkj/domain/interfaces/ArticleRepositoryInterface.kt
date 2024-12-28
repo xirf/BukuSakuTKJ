@@ -10,4 +10,5 @@ interface  ArticleRepositoryInterface {
     suspend fun getArticlesByGroup(group: String): Flow<List<Article>>
     suspend fun getArticleBySlug(slug: String): Flow<Article>
     suspend fun insertArticles(articles: List<Article>)
+    suspend fun clearArticles()
 }
