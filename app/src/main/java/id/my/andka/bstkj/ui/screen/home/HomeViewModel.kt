@@ -33,24 +33,35 @@ class HomeViewModel @Inject constructor(
         fetchGroups()
     }
 
-    fun fetchArticles() {
-        viewModelScope.launch {
-            repository.getArticles().collect { articles ->
-                _viewModelResult.update { it.copy(articleResult = UiState.Success(articles)) }
-                if (articles.isNotEmpty()) {
-                    repository.insertArticles(articles)
+fun fetchArticles() {
+    viewModelScope.launch {
+        repository.getArticles().collect { articles ->
+            if (articles.isNotEmpty()) {
+                // Check if each article is valid
+                Log.d("HomeViewModel", "Articles: ${articles[0]}")
+                val validArticles = articles.filter {
+                    it.id.isNotEmpty() &&
+                    it.slug.isNotEmpty() &&
+                    it.title.isNotEmpty() &&
+                    it.groupName.isNotEmpty() &&
+                    it.body.isNotEmpty() &&
+                    it.updatedDate.isNotEmpty()
                 }
+
+                repository.clearArticles()
+                repository.insertArticles(validArticles)
+                _viewModelResult.update { it.copy(articleResult = UiState.Success(validArticles)) }
             }
         }
     }
-
+}
     fun clearArticles() {
         _viewModelResult.update { it.copy(groupResult = UiState.Loading()) }
 
         viewModelScope.launch {
             repository.clearArticles()
             fetchArticles()
-            delay(2000) // Just to add delay for loading state
+            delay(100) // Just wait idk wait for what
             fetchGroups()
         }
     }

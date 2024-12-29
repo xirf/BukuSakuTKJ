@@ -1,6 +1,5 @@
 package id.my.andka.bstkj.ui.screen.detail
 
-import android.widget.ImageButton
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

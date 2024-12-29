@@ -1,8 +1,6 @@
 package id.my.andka.bstkj
 
 import android.app.Application
-import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -27,17 +25,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.work.HiltWorkerFactory
-import androidx.lifecycle.LiveData
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navArgument
-import androidx.work.Constraints
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
 import dagger.hilt.android.HiltAndroidApp
 import id.my.andka.bstkj.ui.navigation.Screen
 import id.my.andka.bstkj.ui.navigation.composableWithTransitions
@@ -48,56 +38,11 @@ import id.my.andka.bstkj.ui.screen.numbersystem.NumberSystemScreen
 import id.my.andka.bstkj.ui.screen.other.PrivacyPolicyScreen
 import id.my.andka.bstkj.ui.screen.other.TosScreen
 import id.my.andka.bstkj.ui.theme.BsTKJTheme
-import id.my.andka.bstkj.worker.FetchArticlesWorker
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-
 
 @HiltAndroidApp
 class BsTKJApp : Application() {
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
-
     override fun onCreate() {
         super.onCreate()
-        scheduleFetchArticles()
-        observeWorker(this)
-    }
-
-    val constraints = Constraints.Builder()
-        .setRequiredNetworkType(NetworkType.CONNECTED)
-        .build()
-
-    val workRequest = PeriodicWorkRequestBuilder<FetchArticlesWorker>(10, TimeUnit.DAYS)
-        .setConstraints(constraints)
-        .build()
-
-    private fun scheduleFetchArticles() {
-
-
-
-        WorkManager
-            .getInstance(this)
-            .enqueueUniquePeriodicWork(
-                "FetchArticlesWorker",
-                ExistingPeriodicWorkPolicy.KEEP,
-                workRequest
-            )
-    }
-
-
-    fun observeWorker(context: Context) {
-        val workManager = WorkManager.getInstance(context)
-        val workInfoLiveData: LiveData<List<WorkInfo>> = workManager.getWorkInfosForUniqueWorkLiveData(workRequest.stringId)
-
-        workInfoLiveData.observeForever { workInfos ->
-            if (workInfos.isNullOrEmpty()) {
-                return@observeForever
-            }
-
-            val workInfo = workInfos[0]
-            Log.d("WorkInfo", "${workInfo.state}")
-        }
     }
 }
 
@@ -117,19 +62,15 @@ fun BsTKJContent(
             modifier = Modifier.padding(innerPadding)
         ) {
             composableWithTransitions(Screen.Home.route) {
-                HomeScreen(
-                    navController = navController,
-                    onArticleClick = { slug, title ->
-                        navController.navigate(Screen.Detail.createRoute(slug, title))
-                    })
+                HomeScreen(navController = navController, onArticleClick = { slug, title ->
+                    navController.navigate(Screen.Detail.createRoute(slug, title))
+                })
             }
 
             composableWithTransitions(
                 Screen.Detail.route,
-                arguments = listOf(
-                    navArgument("slug") { type = NavType.StringType },
-                    navArgument("title") { type = NavType.StringType }
-                )
+                arguments = listOf(navArgument("slug") { type = NavType.StringType },
+                    navArgument("title") { type = NavType.StringType })
             ) {
                 val slug = it.arguments?.getString("slug")
                 val title = it.arguments?.getString("title")
@@ -138,8 +79,7 @@ fun BsTKJContent(
                     title = title ?: slug ?: "",
                 ) {
                     DetailScreen(
-                        slug = slug ?: "",
-                        modifier = modifier.padding(it)
+                        slug = slug ?: "", modifier = modifier.padding(it)
                     )
                 }
             }
@@ -187,9 +127,7 @@ fun BsTKJContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenWrapper(
-    navController: NavController,
-    title: String,
-    content: @Composable (PaddingValues) -> Unit
+    navController: NavController, title: String, content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -197,14 +135,9 @@ private fun ScreenWrapper(
                 navController = navController,
                 title = title,
             )
-        },
-        contentWindowInsets = WindowInsets(
-            top = 0.dp,
-            left = 0.dp,
-            right = 0.dp,
-            bottom = 0.dp
-        ),
-        content = content
+        }, contentWindowInsets = WindowInsets(
+            top = 0.dp, left = 0.dp, right = 0.dp, bottom = 0.dp
+        ), content = content
     )
 }
 
@@ -214,23 +147,20 @@ private fun TopBar(
     navController: NavController,
     title: String,
 ) {
-    TopAppBar(
-        title = {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                text = title,
-                style = MaterialTheme.typography.titleMedium
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(Icons.Outlined.ArrowBackIosNew, contentDescription = "Back")
-            }
-        },
-        actions = {
-            Spacer(modifier = Modifier.width(48.dp))
+    TopAppBar(title = {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            text = title,
+            style = MaterialTheme.typography.titleMedium
+        )
+    }, navigationIcon = {
+        IconButton(onClick = { navController.popBackStack() }) {
+            Icon(Icons.Outlined.ArrowBackIosNew, contentDescription = "Back")
         }
+    }, actions = {
+        Spacer(modifier = Modifier.width(48.dp))
+    }
 
     )
 }

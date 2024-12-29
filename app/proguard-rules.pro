@@ -1,7 +1,9 @@
 # Preserve annotations
 -keepattributes *Annotation*
-
+#
 -keep class id.my.andka.data.** { *; }
+-keep interface id.my.andka.data.** { *; }
+-keep class id.my.andka.domain.** { *; }
 
 # With R8 full mode generic signatures are stripped for classes that are not
 # kept. Suspend functions are wrapped in continuations where the type argument

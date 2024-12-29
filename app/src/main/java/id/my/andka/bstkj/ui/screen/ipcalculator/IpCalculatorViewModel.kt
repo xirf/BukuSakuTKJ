@@ -2,7 +2,6 @@ package id.my.andka.bstkj.ui.screen.ipcalculator
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import id.my.andka.bstkj.model.CalculationResult
 import id.my.andka.bstkj.utils.getIPAddressInfo
 import kotlinx.coroutines.CoroutineScope

@@ -6,7 +6,10 @@ import id.my.andka.bstkj.data.Article
 import androidx.room.RoomDatabase
 import androidx.room.Room
 
-@Database(entities = [Article::class], version = 1)
+@Database(
+    entities = [Article::class],
+    version = 1
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun articleDao(): ArticleDao
 

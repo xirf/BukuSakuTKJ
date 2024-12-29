@@ -2,7 +2,6 @@ package id.my.andka.bstkj.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.ForeignKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 

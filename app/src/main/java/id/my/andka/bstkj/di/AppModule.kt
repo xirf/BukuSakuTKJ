@@ -10,6 +10,7 @@ import id.my.andka.bstkj.data.source.local.AppDatabase
 import id.my.andka.bstkj.data.source.remote.ApiService
 import id.my.andka.bstkj.data.ArticleRepository
 import id.my.andka.bstkj.data.source.local.ArticleDao
+import id.my.andka.bstkj.data.source.remote.ApiConfig
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -20,11 +21,7 @@ object AppModule {
 
     @Provides
     fun provideApiService(): ApiService {
-        return Retrofit.Builder()
-            .baseUrl("https://bstkj.andka.my.id/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiService::class.java)
+        return ApiConfig.apiService
     }
 
     @Provides

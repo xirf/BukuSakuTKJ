@@ -27,57 +27,6 @@ import id.my.andka.bstkj.ui.screen.ipcalculator.components.IpInput
 import id.my.andka.bstkj.ui.screen.ipcalculator.components.NetworkDetails
 import id.my.andka.bstkj.ui.screen.ipcalculator.components.SubnetInput
 import inet.ipaddr.IPAddressString
-import kotlin.text.compareTo
-
-
-//@Composable
-//fun IPCalculatorScreen(
-//    modifier: Modifier = Modifier, viewModel: IpCalculatorViewModel = IpCalculatorViewModel.instance
-//) {
-//    var subnetMask by remember { mutableIntStateOf(24) }
-//
-//    LazyColumn(
-//        modifier = modifier
-//            .fillMaxSize()
-//            .background(MaterialTheme.colorScheme.background)
-//        ,
-//        contentPadding = PaddingValues(16.dp),
-//        verticalArrangement = Arrangement.spacedBy(8.dp)
-//    ) {
-//        item {
-//            Text(
-//                text = "Alamat IPv4",
-//                style = MaterialTheme.typography.titleMedium,
-//            )
-//            Spacer(modifier = Modifier.height(8.dp))
-//            IpInput(
-//                onIpChanged = { address, subnet ->
-//                    if(IPAddressString(address).isValid()) {
-//                        viewModel.onIpInputChange(address)
-//                    }
-//                    viewModel.onSubnetMaskChange(subnet)
-//                },
-//                onSubnetChanged = { subnet ->
-//                    subnetMask = subnet
-//                    viewModel.onSubnetMaskChange(subnet)
-//                },
-//                subnet = subnetMask,
-//            )
-//        }
-//        item {
-//            SubnetInput(
-//                onMaskSelected = {
-//                    subnetMask = it
-//                    viewModel.onSubnetMaskChange(it)
-//                },
-//                netMask = subnetMask,
-//            )
-//        }
-//        item {
-//            NetworkDetails(viewModel = viewModel)
-//        }
-//    }
-//}
 
 @Composable
 fun IPCalculatorScreen(
