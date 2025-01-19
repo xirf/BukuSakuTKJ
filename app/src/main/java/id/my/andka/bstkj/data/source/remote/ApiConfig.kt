@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiConfig {
-    private const val BASE_URL = "https://bstk.andka.my.id/"
+    private const val BASE_URL = "https://bstkj.andka.my.id/"
 
     private val level = if(BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
     private val loggingInterceptor = HttpLoggingInterceptor().setLevel(level)
